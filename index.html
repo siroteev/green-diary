@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#315b3c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Зелёный дневник">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<title>Зелёный дневник</title>
+<style>
+:root{--ink:#243229;--muted:#66756a;--paper:#f5f7f1;--card:#fff;--line:#e1e8de;--green:#4c9a61;--yellow:#e7c84b;--orange:#ed9147;--red:#d85b55}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:#315b3c;color:#fff;padding:22px 18px 20px;border-radius:0 0 22px 22px}header h1{margin:0;font-size:25px}header p{margin:5px 0 0;color:#dce9dc;font-size:14px}
+main{max-width:760px;margin:auto;padding:15px 13px 40px}.topline{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0 14px}h2{font-size:18px;margin:0}
+button{border:0;border-radius:12px;padding:11px 13px;font:inherit;font-weight:650;cursor:pointer}button:active{transform:scale(.98)}.primary{background:#315b3c;color:white}.soft{background:#edf3e9;color:#315b3c}.danger{background:#fff0ed;color:#a23b32}.plant{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin:12px 0;box-shadow:0 3px 12px #233a2408}
+.planthead{display:flex;gap:10px;align-items:flex-start}.emoji{font-size:29px;background:#edf4e9;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;flex-shrink:0}.plantname{font-weight:750;font-size:17px}.meta{color:var(--muted);font-size:13px;margin-top:3px}.spacer{flex:1}.pill{white-space:nowrap;border-radius:999px;background:#f0f3ed;padding:5px 9px;font-size:12px;font-weight:700}
+.scale{margin:16px 2px 4px}.gradient{height:12px;border-radius:999px;background:linear-gradient(90deg,var(--green) 0%,#a8c96a 25%,var(--yellow) 50%,var(--orange) 75%,var(--red) 100%);position:relative}
+.marker{position:absolute;top:50%;width:20px;height:20px;border:3px solid white;border-radius:50%;background:#315b3c;box-shadow:0 1px 5px #0005;transform:translate(-50%,-50%);transition:left .25s ease}
+.scale-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:7px}.statusline{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px;margin:12px 0 10px}.statusline strong{font-size:14px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions button{font-size:13px;padding:10px 7px}.history-toggle{margin-top:9px;width:100%;text-align:left;background:transparent;color:#4e6352;padding:8px 0;font-size:13px}.history{border-top:1px solid var(--line);padding-top:8px;margin-top:5px}.entry{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:13px;border-bottom:1px solid #eef1eb}.entry span:first-child{flex:1}.entry button{padding:5px 8px;font-size:12px}.note{background:#edf3e9;border-radius:13px;padding:12px;font-size:13px;color:#435748;margin:14px 0}.form{display:none;background:white;border:1px solid var(--line);border-radius:18px;padding:15px;margin:12px 0}.form.show{display:block}label{display:block;font-size:13px;font-weight:650;margin:10px 0 5px}input,select,textarea{width:100%;padding:11px;border:1px solid #d5ded3;border-radius:10px;font:inherit;background:#fff;color:var(--ink)}.formrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.empty{color:var(--muted);text-align:center;padding:24px}.footer{color:var(--muted);font-size:12px;text-align:center;padding:15px}
+@media(max-width:420px){.actions{grid-template-columns:1fr 1fr}.plant{padding:13px}.pill{font-size:11px}.formrow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>🌿 Зелёный дневник</h1><p>Личный журнал ухода · данные сохраняются на этом устройстве</p></header>
+<main>
+<div class="topline"><h2>Мои растения</h2><button class="primary" id="addToggle">＋ Добавить</button></div>
+<div class="note">Цветная шкала — ориентир по времени после последнего полива. Если нажать <b>«Проверил · влажно»</b>, маркер сдвинется в жёлтую зону: это значит, что грунт пока не требует полива. Всегда учитывай реальную влажность, а не только цвет.</div>
+<section class="form" id="form">
+<h2 id="formTitle">Новое растение</h2>
+<label>Название</label><input id="name" placeholder="Например, Филодендрон">
+<div class="formrow"><div><label>Где стоит</label><input id="place" placeholder="Подоконник"></div><div><label>Ориентир проверки, дней</label><input id="interval" type="number" min="1" value="4"></div></div>
+<label>Грунт и заметки</label><input id="soil" placeholder="Рыхлый, пластиковый горшок">
+<div style="display:flex;gap:8px;margin-top:14px"><button class="primary" id="savePlant">Сохранить</button><button class="soft" id="cancelForm">Отмена</button></div>
+</section>
+<section id="plants"></section>
+<div class="footer">Резервную копию можно скачать внизу страницы. Удаление записей требует подтверждения.</div>
+<div class="topline"><button class="soft" id="export">Скачать резервную копию</button><button class="soft" id="importBtn">Восстановить копию</button></div>
+<input type="file" id="importFile" accept="application/json" hidden>
+</main>
+<script>
+const initial=[
+{id:"scindapsus",name:"Сциндапсус pictus",place:"Нижняя полка · около 500 лк с лампой",soil:"Пластиковый горшок с отверстиями · рыхлый магазинный грунт",interval:4,events:[{date:"2026-10-14",type:"water",label:"Полил"}]},
+{id:"epipremnum",name:"Эпипремнум",place:"Верхняя полка · около 500 лк с лампой",soil:"Пластиковый горшок с отверстиями · рыхлый магазинный грунт",interval:4,events:[{date:"2026-10-14",type:"water",label:"Полил"}]},
+{id:"monstera",name:"Монстера pinnatipartita",place:"Стол у восточного окна · за тюлем",soil:"Маленький пластиковый горшок с отверстиями · более торфяной грунт",interval:5,events:[{date:"2026-10-18",type:"water",label:"Полил"}]}
+];
+let plants=load();let editId=null;
+function load(){try{const x=JSON.parse(localStorage.getItem("greenDiaryV2"));return Array.isArray(x)?x:initial}catch(e){return initial}}
+function persist(){localStorage.setItem("greenDiaryV2",JSON.stringify(plants))}
+function today(){let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function dateObj(s){return new Date(s+"T12:00:00")}
+function daysBetween(a,b){return Math.max(0,Math.floor((dateObj(b)-dateObj(a))/86400000))}
+function lastWater(p){return [...p.events].filter(e=>e.type==="water").sort((a,b)=>b.date.localeCompare(a.date))[0]?.date||null}
+function daysSince(p){let d=lastWater(p);return d?daysBetween(d,today()):null}
+function markerPos(p){let age=daysSince(p);if(age===null)return 50;let pos=(age/Math.max(1,Number(p.interval)||4))*100;return Math.min(100,Math.max(0,pos))}
+function state(p){let age=daysSince(p),pos=markerPos(p);let last=p.events.length?p.events[p.events.length-1]:null;if(last&&last.type==="moist"&&last.date===today())return {text:"Проверено · грунт влажный",pill:"Влажно",pos:38,color:"#9fbd62"};if(age===null)return {text:"Нет записи о поливе",pill:"Проверить",pos:50,color:"#d7b63c"};if(age<=(p.interval||4)*.35)return {text:"Недавно полит",pill:"Всё спокойно",pos:Math.min(25,age/(p.interval||4)*100),color:"#4c9a61"};if(age<(p.interval||4)*.7)return {text:"Пора проверить грунт",pill:"Проверить",pos:Math.min(62,age/(p.interval||4)*100),color:"#d7b63c"};if(age<(p.interval||4))return {text:"Проверить внимательно",pill:"Внимание",pos:Math.min(78,age/(p.interval||4)*100),color:"#ed9147"};return {text:"Возможно, пора полить",pill:"Скоро полив",pos:100,color:"#d85b55"}}
+function fmt(s){return new Intl.DateTimeFormat("ru-RU",{day:"numeric",month:"short",year:"numeric"}).format(dateObj(s))}
+function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function log(p,type,label){p.events.push({date:today(),type,label});persist();render()}
+function render(){const root=document.getElementById("plants");if(!plants.length){root.innerHTML='<div class="empty">Пока нет растений. Нажми «Добавить».</div>';return}
+root.innerHTML=plants.map(p=>{let s=state(p),last=lastWater(p),age=daysSince(p),hist=[...p.events].sort((a,b)=>b.date.localeCompare(a.date));return `<article class="plant">
+<div class="planthead"><div class="emoji">🪴</div><div style="flex:1;min-width:0"><div class="plantname">${esc(p.name)}</div><div class="meta">${esc(p.place)}</div></div><span class="pill">${s.pill}</span></div>
+<div class="scale"><div class="gradient"><i class="marker" style="left:${s.pos}%;background:${s.color}"></i></div><div class="scale-labels"><span>Недавно полит</span><span>Проверить</span><span>Возможно, полив</span></div></div>
+<div class="statusline"><span>${s.text}</span><strong>${last?`Полив: ${fmt(last)}`:"Полив не записан"}</strong></div>
+<div class="meta">${age===null?"":`Прошло дней после полива: ${age} · ориентир проверки: ${p.interval} дн.`}${p.soil?`<br>${esc(p.soil)}`:""}</div>
+<div class="actions" style="margin-top:12px"><button class="primary" data-act="water" data-id="${p.id}">💧 Полил сегодня</button><button class="soft" data-act="moist" data-id="${p.id}">✓ Проверил · влажно</button><button class="soft" data-act="dry" data-id="${p.id}">☀ Проверил · сухо</button><button class="soft" data-act="edit" data-id="${p.id}">✎ Изменить</button></div>
+<button class="history-toggle" data-act="history" data-id="${p.id}">История действий (${hist.length}) ▾</button>
+<div class="history" id="hist-${p.id}" hidden>${hist.length?hist.map((e,i)=>`<div class="entry"><span>${fmt(e.date)} — ${esc(e.label)}</span><button class="danger" data-act="delete" data-id="${p.id}" data-index="${p.events.indexOf(e)}">Удалить</button></div>`).join(""):"<div class='meta'>Записей пока нет.</div>"}</div>
+</article>`}).join("")}
+document.getElementById("plants").addEventListener("click",e=>{const b=e.target.closest("button[data-act]");if(!b)return;let p=plants.find(x=>x.id===b.dataset.id);if(!p)return;switch(b.dataset.act){case"water":log(p,"water","Полил");break;case"moist":log(p,"moist","Проверил — грунт влажный");break;case"dry":log(p,"dry","Проверил — грунт сухой");break;case"history":{let h=document.getElementById("hist-"+p.id);h.hidden=!h.hidden;b.textContent=`История действий (${p.events.length}) ${h.hidden?"▾":"▴"}`;break}case"delete":if(confirm("Удалить эту запись из истории?")){p.events.splice(Number(b.dataset.index),1);persist();render()}break;case"edit":showForm(p);break;}});
+function showForm(p=null){editId=p?.id||null;document.getElementById("formTitle").textContent=p?"Изменить растение":"Новое растение";document.getElementById("name").value=p?.name||"";document.getElementById("place").value=p?.place||"";document.getElementById("interval").value=p?.interval||4;document.getElementById("soil").value=p?.soil||"";document.getElementById("form").classList.add("show");document.getElementById("name").focus()}
+document.getElementById("addToggle").onclick=()=>showForm();document.getElementById("cancelForm").onclick=()=>document.getElementById("form").classList.remove("show");
+document.getElementById("savePlant").onclick=()=>{let name=document.getElementById("name").value.trim();if(!name){alert("Введи название растения.");return}let data={name,place:document.getElementById("place").value.trim(),interval:Math.max(1,Number(document.getElementById("interval").value)||4),soil:document.getElementById("soil").value.trim()};if(editId){Object.assign(plants.find(p=>p.id===editId),data)}else{plants.push({id:"p"+Date.now(),...data,events:[]})}persist();document.getElementById("form").classList.remove("show");render()};
+document.getElementById("export").onclick=()=>{const blob=new Blob([JSON.stringify(plants,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="zeleny-dnevnik-backup.json";a.click();URL.revokeObjectURL(a.href)};
+document.getElementById("importBtn").onclick=()=>document.getElementById("importFile").click();
+document.getElementById("importFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d))throw Error();if(confirm("Заменить текущий журнал данными из резервной копии?")){plants=d;persist();render()}}catch(err){alert("Не удалось прочитать резервную копию.")}e.target.value=""};
+persist();render();
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(err => console.warn('Offline mode unavailable:', err)); }); }
+</script></body></html>
