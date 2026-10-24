@@ -1,7 +1,7 @@
 {
   "id": "./",
   "name": "Зелёный дневник",
-  "short_name": "Дневник растений",
+  "short_name": "Зелёный дневник",
   "description": "Личный дневник ухода за комнатными растениями",
   "lang": "ru",
   "start_url": "./",
@@ -12,19 +12,19 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512-maskable.png",
+      "src": "./icon-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
