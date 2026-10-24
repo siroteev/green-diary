@@ -16,7 +16,7 @@
 header{background:#315b3c;color:#fff;padding:22px 18px 20px;border-radius:0 0 22px 22px}header h1{margin:0;font-size:25px}header p{margin:5px 0 0;color:#dce9dc;font-size:14px}
 main{max-width:760px;margin:auto;padding:15px 13px 40px}.topline{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0 14px}h2{font-size:18px;margin:0}
 button{border:0;border-radius:12px;padding:11px 13px;font:inherit;font-weight:650;cursor:pointer}button:active{transform:scale(.98)}.primary{background:#315b3c;color:white}.soft{background:#edf3e9;color:#315b3c}.danger{background:#fff0ed;color:#a23b32}.plant{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin:12px 0;box-shadow:0 3px 12px #233a2408}
-.planthead{display:flex;gap:10px;align-items:flex-start}.emoji{font-size:29px;background:#edf4e9;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;flex-shrink:0}.plantname{font-weight:750;font-size:17px}.meta{color:var(--muted);font-size:13px;margin-top:3px}.spacer{flex:1}.pill{white-space:nowrap;border-radius:999px;background:#f0f3ed;padding:5px 9px;font-size:12px;font-weight:700}
+.planthead{display:flex;gap:10px;align-items:flex-start}.emoji{background:#edf4e9;width:58px;height:58px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;overflow:hidden}.emoji svg{width:100%;height:100%;display:block}.icon-option{padding:4px;background:#f4f7f0;border:2px solid transparent;border-radius:12px;line-height:1.1;min-width:0}.icon-option svg{width:54px;height:54px;max-width:100%;display:block;margin:auto}.icon-label{font-size:10px;display:block;margin-top:3px;font-weight:500}.plantname{font-weight:750;font-size:17px}.meta{color:var(--muted);font-size:13px;margin-top:3px}.spacer{flex:1}.pill{white-space:nowrap;border-radius:999px;background:#f0f3ed;padding:5px 9px;font-size:12px;font-weight:700}
 .scale{margin:16px 2px 4px}.gradient{height:12px;border-radius:999px;background:linear-gradient(90deg,var(--green) 0%,#a8c96a 25%,var(--yellow) 50%,var(--orange) 75%,var(--red) 100%);position:relative}
 .marker{position:absolute;top:50%;width:20px;height:20px;border:3px solid white;border-radius:50%;background:#315b3c;box-shadow:0 1px 5px #0005;transform:translate(-50%,-50%);transition:left .25s ease}
 .scale-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:7px}.statusline{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px;margin:12px 0 10px}.statusline strong{font-size:14px}
@@ -43,20 +43,69 @@ button{border:0;border-radius:12px;padding:11px 13px;font:inherit;font-weight:65
 </main>
 <script>
 const plantIcons=[
-{emoji:"🌿",label:"Лиственное"},{emoji:"🌱",label:"Росток"},{emoji:"🪴",label:"В горшке"},{emoji:"🌵",label:"Кактус"},{emoji:"🌴",label:"Пальма"},{emoji:"🌳",label:"Дерево"},
-{emoji:"🍃",label:"Лиана"},{emoji:"🌺",label:"Цветущее"},{emoji:"🌸",label:"Орхидея"},{emoji:"🌼",label:"Герань"},{emoji:"🌻",label:"Подсолнечник"},{emoji:"🍀",label:"Клевер"},
-{emoji:"🪻",label:"Фиалка"},{emoji:"🌷",label:"Тюльпан"},{emoji:"🌹",label:"Роза"},{emoji:"🍋",label:"Цитрус"},{emoji:"🌾",label:"Злак"},{emoji:"🌲",label:"Хвойное"},
-{emoji:"🪷",label:"Лотос"},{emoji:"☘️",label:"Пеперомия"},{emoji:"🥀",label:"Суккулент"},{emoji:"🍄",label:"Мох и грибы"},{emoji:"🍊",label:"Цитрус"},{emoji:"🥬",label:"Зелень"}
+{id:"rubber",label:"Фикус эластика",kind:"rubber",color:"#285d3b"},
+{id:"monstera",label:"Монстера",kind:"monstera",color:"#2e7a4b"},
+{id:"pothos",label:"Эпипремнум",kind:"vine",color:"#4b8b4a"},
+{id:"scindapsus",label:"Сциндапсус",kind:"silver",color:"#477a68"},
+{id:"snake",label:"Сансевиерия",kind:"upright",color:"#477944"},
+{id:"zz",label:"Замиокулькас",kind:"compound",color:"#28633e"},
+{id:"peace-lily",label:"Спатифиллум",kind:"lily",color:"#3b8050"},
+{id:"orchid",label:"Орхидея",kind:"orchid",color:"#34764c"},
+{id:"violet",label:"Фиалка",kind:"violet",color:"#39824e"},
+{id:"aloe",label:"Алоэ",kind:"succulent",color:"#4d9966"},
+{id:"cactus",label:"Кактус",kind:"cactus",color:"#39835b"},
+{id:"palm",label:"Комнатная пальма",kind:"palm",color:"#34804e"},
+{id:"fern",label:"Папоротник",kind:"fern",color:"#36884c"},
+{id:"calathea",label:"Калатея",kind:"striped",color:"#39734b"},
+{id:"ficus-benjamina",label:"Фикус Бенджамина",kind:"small-leaf",color:"#397b45"},
+{id:"geranium",label:"Пеларгония",kind:"geranium",color:"#39804b"},
+{id:"echeveria",label:"Эхеверия",kind:"rosette",color:"#6e9c79"},
+{id:"philodendron",label:"Филодендрон",kind:"heart",color:"#2c7749"},
+{id:"dracaena",label:"Драцена",kind:"spiky",color:"#37804b"},
+{id:"anthurium",label:"Антуриум",kind:"anthurium",color:"#34754b"},
+{id:"hoya",label:"Хойя",kind:"hoya",color:"#3b8750"},
+{id:"spider",label:"Хлорофитум",kind:"spider",color:"#4c9658"},
+{id:"begonia",label:"Бегония",kind:"begonia",color:"#3e7c4c"},
+{id:"peperomia",label:"Пеперомия",kind:"round",color:"#367b48"},
+{id:"citrus",label:"Комнатный цитрус",kind:"citrus",color:"#3b8146"}
 ];
+function plantSvg(it){
+ const c=it.color, dark="#214a32", pot="#c58d68", pale="#f1f5eb";
+ const leaf=(x,y,rx,ry,rot=0,fill=c,vein=true)=>`<g transform="translate(${x} ${y}) rotate(${rot})"><ellipse rx="${rx}" ry="${ry}" fill="${fill}" stroke="${dark}" stroke-width=".65"/><path d="M0 ${ry*.82} Q0 0 0 ${-ry*.82}" fill="none" stroke="#d4e3b7" stroke-width=".8" opacity=".9"/>${vein&&rx>5?`<path d="M0 0 L${rx*.65} ${-ry*.25} M0 ${ry*.25} L${-rx*.6} ${ry*.05}" stroke="#d4e3b7" stroke-width=".55" fill="none" opacity=".7"/>`:''}</g>`;
+ let a=[]; const stem=(x1,y1,x2,y2)=>a.push(`<path d="M${x1} ${y1} Q${(x1+x2)/2-2} ${(y1+y2)/2} ${x2} ${y2}" fill="none" stroke="#47704a" stroke-width="2.1" stroke-linecap="round"/>`);
+ if(it.kind==="rubber"){stem(48,70,47,21);a.push(leaf(34,29,9,18,-42),leaf(60,27,10,19,38),leaf(32,48,9,15,-48),leaf(60,46,10,16,48),leaf(46,19,8,15,0,"#3c7a47"));}
+ else if(it.kind==="monstera"){stem(48,70,46,26);a.push(`<path d="M46 48 C23 42 21 23 34 17 C37 28 43 26 46 19 C51 29 58 24 61 18 C76 31 66 46 49 51 L49 65 L44 65 Z" fill="${c}" stroke="${dark}" stroke-width="1.1"/><path d="M47 50 L35 28 M48 48 L61 28 M48 50 L60 42" stroke="#d5e6bd" stroke-width="1.1" fill="none"/><ellipse cx="34" cy="38" rx="3" ry="5" fill="${pale}"/><ellipse cx="60" cy="35" rx="3" ry="5" fill="${pale}"/>`,leaf(33,57,8,13,-48),leaf(61,57,8,13,47));}
+ else if(it.kind==="vine"||it.kind==="silver"||it.kind==="heart"||it.kind==="hoya"){stem(46,68,28,20);stem(46,68,65,24);stem(46,68,48,15);for(let [x,y,r] of [[30,28,-45],[40,42,35],[61,31,42],[57,48,-35],[35,55,-45],[49,20,25]])a.push(it.kind==="heart"?`<path d="M${x} ${y+7} C${x-13} ${y-1} ${x-8} ${y-13} ${x} ${y-6} C${x+8} ${y-13} ${x+13} ${y-1} ${x} ${y+7}Z" fill="${c}" stroke="${dark}" stroke-width=".7"/>`:leaf(x,y,7,11,r,it.kind==="silver"&&y%2?"#8cae9c":c));}
+ else if(it.kind==="upright"||it.kind==="spiky"||it.kind==="spider"){for(let i=0;i<7;i++){let x=25+i*6;let h=28+(i%3)*8;let x2=48+(i-3)*4;a.push(`<path d="M48 70 Q${x2} ${70-h/2} ${x} ${70-h}" stroke="${dark}" stroke-width=".7" fill="${c}"/>`);if(it.kind!=="upright")a.push(`<path d="M48 70 Q${x2} ${70-h/2} ${x} ${70-h}" stroke="#d7e5ae" stroke-width="1.2" fill="none"/>`);}}
+ else if(it.kind==="compound"||it.kind==="fern"){stem(48,70,48,22);for(let i=0;i<5;i++){let y=29+i*7;a.push(leaf(39,y,5,10,-50),leaf(57,y-2,5,10,50));}a.push(leaf(48,19,5,10,0));}
+ else if(it.kind==="lily"){stem(45,70,35,25);stem(50,70,59,26);a.push(leaf(31,45,8,15,-40),leaf(61,46,8,15,42),`<path d="M35 29 Q26 16 36 14 Q46 17 39 27 Q49 17 54 23 Q54 31 40 32 Q33 37 35 29Z" fill="#f8faf3" stroke="#7c9c7a" stroke-width="1"/>`);}
+ else if(it.kind==="orchid"){stem(48,70,54,24);a.push(leaf(38,60,12,6,-12),leaf(56,60,12,6,15));for(let [x,y] of [[53,24],[62,31],[51,39]])a.push(`<g transform="translate(${x} ${y})"><ellipse cy="-5" rx="3.7" ry="6" fill="#d8a9cf"/><ellipse cy="5" rx="4" ry="5" fill="#c58dbd"/><ellipse cx="-5" cy="0" rx="5" ry="3.5" fill="#e4c5dc"/><ellipse cx="5" cy="0" rx="5" ry="3.5" fill="#e4c5dc"/><circle r="2" fill="#e7c35d"/></g>`);}
+ else if(it.kind==="violet"){a.push(leaf(33,53,8,12,-40),leaf(60,53,8,12,40),leaf(45,45,7,12,0));for(let [x,y] of [[39,28],[53,26],[47,35]])a.push(`<g transform="translate(${x} ${y})" fill="#8d78bc" stroke="#64518f" stroke-width=".5"><ellipse cy="-3" rx="3.2" ry="5"/><ellipse cx="3" rx="5" ry="3.2"/><ellipse cy="3" rx="3.2" ry="5"/><ellipse cx="-3" rx="5" ry="3.2"/><circle r="1.5" fill="#f2d96d"/></g>`);}
+ else if(it.kind==="succulent"||it.kind==="rosette"){for(let ring=0;ring<3;ring++){let n=ring===0?7:ring===1?6:5;for(let i=0;i<n;i++){let ang=i*360/n+ring*17,rad=ring===0?12:ring===1?8:4;let x=48+Math.cos(ang*Math.PI/180)*rad,y=48+Math.sin(ang*Math.PI/180)*rad; a.push(leaf(x,y,ring===0?5:4,ring===0?11:8,ang+90,ring===0?"#80ad86":c));}}}
+ else if(it.kind==="cactus"){a.push(`<path d="M39 68 L39 39 Q39 31 44 31 Q49 31 49 39 L49 68Z M49 53 L55 53 L55 43 Q55 38 59 38 Q63 38 63 43 L63 68 L49 68Z" fill="${c}" stroke="${dark}" stroke-width="1"/>`);for(let y=39;y<65;y+=7)a.push(`<path d="M42 ${y} l2 -2 M46 ${y+3} l-2 -2 M56 ${y+2} l2 -2" stroke="#dce7b6" stroke-width="1"/>`);}
+ else if(it.kind==="palm"){stem(48,70,48,35);for(let i=0;i<9;i++){let ang=-160+i*20,rad=25, x=48+Math.cos(ang*Math.PI/180)*rad,y=35+Math.sin(ang*Math.PI/180)*rad;a.push(`<path d="M48 36 Q${(48+x)/2} ${(36+y)/2-3} ${x} ${y} Q${x-4} ${y+3} 48 39Z" fill="${c}" stroke="${dark}" stroke-width=".5"/>`);}}
+ else if(it.kind==="striped"){stem(48,70,48,25);for(let [x,y,r] of [[34,35,-40],[61,35,40],[34,52,40],[61,52,-40],[48,23,0]])a.push(`<g transform="translate(${x} ${y}) rotate(${r})"><ellipse rx="7" ry="13" fill="${c}" stroke="${dark}" stroke-width=".6"/><path d="M0 -11 Q-4 0 0 11 M-3 -5 L3 -1 M-3 2 L3 6" fill="none" stroke="#d9d4a0" stroke-width="1.2"/></g>`);}
+ else if(it.kind==="small-leaf"){stem(48,70,48,24);for(let i=0;i<8;i++){let y=28+i*5;a.push(leaf(40-(i%2)*4,y,4,6,-45),leaf(55+(i%2)*3,y+2,4,6,45));}}
+ else if(it.kind==="geranium"){stem(48,70,48,34);a.push(leaf(34,48,9,10,-25),leaf(61,48,9,10,25),leaf(48,39,8,9,0));for(let i=0;i<6;i++){let ang=i*60;a.push(`<ellipse cx="48" cy="25" rx="4" ry="6" transform="rotate(${ang} 48 30)" fill="#d96b70" stroke="#9e484f" stroke-width=".6"/>`);}a.push(`<circle cx="48" cy="30" r="3" fill="#f0cf6b"/>`);}
+ else if(it.kind==="anthurium"){stem(48,70,40,26);a.push(leaf(34,48,9,15,-35),leaf(60,48,9,15,35),`<path d="M48 38 C26 27 39 12 49 24 C61 11 72 28 49 39Z" fill="#d76d75" stroke="#8e454c" stroke-width=".8"/><path d="M49 36 L52 20" stroke="#f0d28a" stroke-width="2"/>`);}
+ else if(it.kind==="begonia"){stem(48,70,48,28);a.push(`<path d="M48 48 C20 43 25 24 44 30 L48 35 C60 17 75 34 53 48Z" fill="#438957" stroke="${dark}" stroke-width=".8"/><path d="M48 48 L36 33 M48 48 L61 31" stroke="#e5b2b5" stroke-width="1.3"/>`,leaf(36,55,7,10,-35),leaf(60,55,7,10,35));}
+ else if(it.kind==="round"){stem(48,70,48,28);a.push(leaf(34,38,9,9,-30),leaf(60,38,9,9,30),leaf(35,53,8,8,-35),leaf(60,53,8,8,35),leaf(48,28,8,8,0));}
+ else if(it.kind==="citrus"){stem(48,70,48,23);stem(48,44,31,32);stem(48,47,65,34);a.push(leaf(32,31,7,11,-45),leaf(42,24,7,11,-15),leaf(59,30,7,11,38),leaf(67,37,7,11,55),leaf(34,43,7,11,-55),leaf(60,47,7,11,45),leaf(46,40,7,11,5),`<circle cx="37" cy="51" r="4.5" fill="#edaa36" stroke="#b97720" stroke-width=".7"/><circle cx="61" cy="53" r="4.5" fill="#edaa36" stroke="#b97720" stroke-width=".7"/>`);}
+ // common pot, soil and highlights
+ a.push(`<path d="M28 66 L68 66 L63 86 Q48 91 33 86Z" fill="${pot}" stroke="#95674d" stroke-width="1"/><ellipse cx="48" cy="67" rx="20" ry="4" fill="#6c513c"/><path d="M32 71 L35 83 M64 71 L61 83" stroke="#e2b398" stroke-width="1.4" opacity=".75"/>`);
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="${it.label}"><rect width="96" height="96" rx="16" fill="#edf4e9"/>${a.join('')}</svg>`;
+}
+function iconMarkup(id){const it=plantIcons.find(x=>x.id===id);return it?plantSvg(it):plantSvg(plantIcons[0])}
+function normalizeIcon(icon){if(plantIcons.some(x=>x.id===icon))return icon;const map={"🍃":"scindapsus","🌿":"pothos","🌱":"monstera","🪴":"rubber","🌵":"cactus","🌴":"palm","🌳":"ficus-benjamina","🌺":"geranium","🌸":"orchid","🌼":"geranium","🪻":"violet","🌷":"peace-lily","🌹":"anthurium","🍋":"peperomia","🍊":"peperomia","🌾":"spider","🌲":"rubber","🪷":"peace-lily","☘️":"peperomia","🥀":"echeveria","🍄":"fern","🥬":"peperomia"};return map[icon]||"rubber"}
 function seasonalInterval(){const m=new Date().getMonth()+1;return (m>=9||m<=2)?7:5}
-let selectedIcon="🌿";
+let selectedIcon="pothos";
 const initial=[
-{id:"scindapsus",icon:"🍃",name:"Сциндапсус pictus",place:"Нижняя полка · около 500 лк с лампой",soil:"Пластиковый горшок с отверстиями · рыхлый магазинный грунт",interval:4,events:[{date:"2026-10-14",type:"water",label:"Полил"}]},
-{id:"epipremnum",icon:"🌿",name:"Эпипремнум",place:"Верхняя полка · около 500 лк с лампой",soil:"Пластиковый горшок с отверстиями · рыхлый магазинный грунт",interval:4,events:[{date:"2026-10-14",type:"water",label:"Полил"}]},
-{id:"monstera",icon:"🌱",name:"Монстера pinnatipartita",place:"Стол у восточного окна · за тюлем",soil:"Маленький пластиковый горшок с отверстиями · более торфяной грунт",interval:5,events:[{date:"2026-10-18",type:"water",label:"Полил"}]}
+{id:"scindapsus",icon:"scindapsus",name:"Сциндапсус pictus",place:"Нижняя полка · около 500 лк с лампой",soil:"Пластиковый горшок с отверстиями · рыхлый магазинный грунт",interval:4,events:[{date:"2026-10-14",type:"water",label:"Полил"}]},
+{id:"epipremnum",icon:"pothos",name:"Эпипремнум",place:"Верхняя полка · около 500 лк с лампой",soil:"Пластиковый горшок с отверстиями · рыхлый магазинный грунт",interval:4,events:[{date:"2026-10-14",type:"water",label:"Полил"}]},
+{id:"monstera",icon:"monstera",name:"Монстера pinnatipartita",place:"Стол у восточного окна · за тюлем",soil:"Маленький пластиковый горшок с отверстиями · более торфяной грунт",interval:5,events:[{date:"2026-10-18",type:"water",label:"Полил"}]}
 ];
 let plants=load();let editId=null;
-function load(){try{const x=JSON.parse(localStorage.getItem("greenDiaryV2"));return Array.isArray(x)?x.map(p=>({...p,icon:p.icon||"🪴",lateMoistCycles:Number(p.lateMoistCycles)||0,cycleLateMoist:!!p.cycleLateMoist})):initial}catch(e){return initial}}
+function load(){try{const x=JSON.parse(localStorage.getItem("greenDiaryV2"));return Array.isArray(x)?x.map(p=>({...p,icon:normalizeIcon(p.icon||"rubber"),lateMoistCycles:Number(p.lateMoistCycles)||0,cycleLateMoist:!!p.cycleLateMoist})):initial}catch(e){return initial}}
 function persist(){localStorage.setItem("greenDiaryV2",JSON.stringify(plants))}
 function today(){let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
 function dateObj(s){return new Date(s+"T12:00:00")}
@@ -70,7 +119,7 @@ function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 function log(p,type,label){p.events.push({date:today(),type,label});persist();render()}
 function render(){const root=document.getElementById("plants");if(!plants.length){root.innerHTML='<div class="empty">Пока нет растений. Нажми «Добавить».</div>';return}
 root.innerHTML=plants.map(p=>{let s=state(p),last=lastWater(p),age=daysSince(p),hist=[...p.events].sort((a,b)=>b.date.localeCompare(a.date));return `<article class="plant">
-<div class="planthead"><div class="emoji">${esc(p.icon||"🪴")}</div><div style="flex:1;min-width:0"><div class="plantname">${esc(p.name)}</div><div class="meta">${esc(p.place)}</div></div><span class="pill">${s.pill}</span></div>
+<div class="planthead"><div class="emoji">${iconMarkup(normalizeIcon(p.icon))}</div><div style="flex:1;min-width:0"><div class="plantname">${esc(p.name)}</div><div class="meta">${esc(p.place)}</div></div><span class="pill">${s.pill}</span></div>
 <div class="scale"><div class="gradient"><i class="marker" style="left:${s.pos}%;background:${s.color}"></i></div><div class="scale-labels"><span>Недавно полит</span><span>Проверить</span><span>Возможно, полив</span></div></div>
 <div class="statusline"><span>${s.text}</span><strong>${last?`Полив: ${fmt(last)}`:"Полив не записан"}</strong></div>
 <div class="meta">${age===null?"":`Прошло дней после полива: ${age} · ориентир проверки: ${p.interval} дн.`}${p.soil?`<br>${esc(p.soil)}`:""}</div>
@@ -90,9 +139,9 @@ case"dry":{
 const age=daysSince(p), interval=Math.max(1,Number(p.interval)||seasonalInterval());
 if(age!==null&&age<interval){if(confirm(`Грунт уже сухой через ${age} дн. после полива, раньше текущего ориентира (${interval} дн.). Изменить ориентир проверки на ${Math.max(1,age)} дн.?`)){p.interval=Math.max(1,age);}}
 log(p,"dry","Проверил — грунт сухой");break;}case"history":{let h=document.getElementById("hist-"+p.id);h.hidden=!h.hidden;b.textContent=`История действий (${p.events.length}) ${h.hidden?"▾":"▴"}`;break}case"delete":if(confirm("Удалить эту запись из истории?")){p.events.splice(Number(b.dataset.index),1);persist();render()}break;case"edit":showForm(p);break;}});
-function renderIconPicker(){const root=document.getElementById("iconPicker");root.innerHTML=plantIcons.map((it,i)=>`<button type="button" class="icon-option ${selectedIcon===it.emoji?"selected":""}" data-icon="${it.emoji}" aria-label="${it.label}">${it.emoji}<span class="icon-label">${it.label}</span></button>`).join("");}
+function renderIconPicker(){const root=document.getElementById("iconPicker");root.innerHTML=plantIcons.map(it=>`<button type="button" class="icon-option ${selectedIcon===it.id?"selected":""}" data-icon="${it.id}" aria-label="${it.label}">${plantSvg(it)}<span class="icon-label">${it.label}</span></button>`).join("");}
 document.getElementById("iconPicker").addEventListener("click",e=>{const b=e.target.closest("button[data-icon]");if(!b)return;selectedIcon=b.dataset.icon;renderIconPicker()});
-function showForm(p=null){editId=p?.id||null;document.getElementById("formTitle").textContent=p?"Изменить растение":"Новое растение";document.getElementById("name").value=p?.name||"";document.getElementById("place").value=p?.place||"";document.getElementById("interval").value=p?.interval||seasonalInterval();selectedIcon=p?.icon||"🪴";renderIconPicker();document.getElementById("soil").value=p?.soil||"";document.getElementById("form").classList.add("show");document.getElementById("name").focus()}
+function showForm(p=null){editId=p?.id||null;document.getElementById("formTitle").textContent=p?"Изменить растение":"Новое растение";document.getElementById("name").value=p?.name||"";document.getElementById("place").value=p?.place||"";document.getElementById("interval").value=p?.interval||seasonalInterval();selectedIcon=normalizeIcon(p?.icon||"rubber");renderIconPicker();document.getElementById("soil").value=p?.soil||"";document.getElementById("form").classList.add("show");document.getElementById("name").focus()}
 document.getElementById("addToggle").onclick=()=>showForm();document.getElementById("cancelForm").onclick=()=>document.getElementById("form").classList.remove("show");
 document.getElementById("savePlant").onclick=()=>{let name=document.getElementById("name").value.trim();if(!name){alert("Введи название растения.");return}let data={name,place:document.getElementById("place").value.trim(),interval:Math.max(1,Number(document.getElementById("interval").value)||seasonalInterval()),soil:document.getElementById("soil").value.trim(),icon:selectedIcon};if(editId){Object.assign(plants.find(p=>p.id===editId),data)}else{plants.push({id:"p"+Date.now(),...data,events:[]})}persist();document.getElementById("form").classList.remove("show");render()};
 document.getElementById("export").onclick=()=>{const blob=new Blob([JSON.stringify(plants,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="zeleny-dnevnik-backup.json";a.click();URL.revokeObjectURL(a.href)};
